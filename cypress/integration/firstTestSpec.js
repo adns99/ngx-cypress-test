@@ -214,8 +214,19 @@ describe('First suite', () => {
     it.only('List and dropdowns', () =>{
         cy.visit('/')
 
+        // Example 1
         cy.get('nav nb-select').click()
-        
+        cy.get('.options-list').contains('Dark').click()
+        cy.get('nav nb-select').should('contain', 'Dark')
+        cy.get('nb-layout-header nav').should('have.css', 'background-color', 'rgb(34, 43, 69)')
+
+        // Example 2 - Through the entire list of elements
+        cy.get('nav nb-select').then( dropdown => {
+            cy.wrap(dropdown).click()
+            cy.get('.options-list nb-options').each( listItem => {
+                listItem.text().trim()
+            })
+        })
     })
 
 
