@@ -6,6 +6,8 @@
 // https://on.cypress.io/writing-first-test
 /// <reference types="cypress" /> 
 
+const { table } = require("console")
+
 describe('First suite', () => {
 
     it('First test', () =>{
@@ -211,7 +213,7 @@ describe('First suite', () => {
 
     })
 
-    it.only('List and dropdowns', () =>{
+    it('List and dropdowns', () =>{
         cy.visit('/')
 
         // Example 1
@@ -223,10 +225,75 @@ describe('First suite', () => {
         // Example 2 - Through the entire list of elements
         cy.get('nav nb-select').then( dropdown => {
             cy.wrap(dropdown).click()
-            cy.get('.options-list nb-options').each( listItem => {
-                listItem.text().trim()
+            cy.get('.options-list nb-option').each( (listItem, index) => {
+                const itemText = listItem.text().trim()
+
+                const colors = {
+                    "Light": "rgb(255, 255, 255)",
+                    "Dark": "rgb(34, 43, 69)",
+                    "Cosmic": "rgb(50, 50, 89)",
+                    "Corporate": "rgb(255, 255, 255)"
+                }
+
+                cy.wrap(listItem).click()
+                cy.wrap(dropdown).should('contain', itemText)
+                cy.get('nb-layout-header nav').should('have.css', 'background-color', colors[itemText])
+                if(index < 3){
+                    cy.wrap(dropdown).click()
+                }
             })
         })
+    })
+
+    it.only('Web Tables', () =>{
+        cy.visit('/')
+        cy.contains('Tables & Data').click()
+        cy.contains('Smart Table').click()
+
+        // Scenario 1: Edit Larry's age and verify
+        cy.get('tbody').contains('tr', 'Larry').then( tableRow =>{
+            cy.wrap(tableRow).find('.nb-edit').click()
+            cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('25')
+            cy.wrap(tableRow).find('.nb-checkmark').click()
+            cy.wrap(tableRow).find('td').eq(6).should('contain', "25")
+        })
+
+        // Scenario 2: Adding a new row
+        cy.get('thead').find('.nb-plus').click()
+        cy.get('thead').find('tr').eq(2).then( tableRow =>{
+            cy.wrap(tableRow).find('[placeholder="First Name"]').type('Adrian')
+            cy.wrap(tableRow).find('[placeholder="Last Name"]').type('Sanabria')
+            cy.wrap(tableRow).find('.nb-checkmark').click()
+        })
+
+        cy.get('tbody tr').first().find('td').then( tableColumns =>{
+            cy.wrap(tableColumns).eq(2).should('contain', 'Adrian')
+            cy.wrap(tableColumns).eq(3).should('contain', 'Sanabria')
+        })
+
+        // Scenario 3: Search
+
+        const age = [20, 30, 40, 200]
+
+        cy.wrap(age).each( age =>{
+
+            cy.get('thead [placeholder="Age"]').clear().type(age)
+            cy.wait(500)
+            cy.get('tbody tr').each( tableRow =>{
+
+                if(age == 200){
+                    cy.wrap(tableRow).should('contain', 'No data found')
+
+                } else {
+                    cy.wrap(tableRow).find('td').eq(6).should('contain', age)
+
+                }
+
+            })
+
+        })
+
+
     })
 
 
