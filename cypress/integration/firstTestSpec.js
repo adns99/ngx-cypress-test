@@ -349,22 +349,44 @@ describe('First suite', () => {
 
     })
 
-    it.only('Dialog box', () => {
+    it('Dialog box', () => {
         
         cy.visit('/')
         cy.contains('Tables & Data').click()
         cy.contains('Smart Table').click()
 
         // Example 1 - Not ideal:
-        cy.get('tbody tr').first().find('.nb-trash').click()
-        cy.on('window:confirm', (confirm) => {
-            expect(confirm).to.equal('Are you sure you want to delete?')
-        })
+        // cy.get('tbody tr').first().find('.nb-trash').click()
+        // cy.on('window:confirm', (confirm) => {
+        //     expect(confirm).to.equal('Are you sure you want to delete?')
+        // })
 
-        // Example 2: Better way but more complicated:
-        
+        // Example 2: Better way but more complicated
+        // const stub = cy.stub()
+        // cy.on('window:confirm', stub)
+        // cy.get('tbody tr').first().find('.nb-trash').click().then( () =>{
+        //     expect(stub.getCall(0)).to.be.calledWith('Are you sure you want to delete?')
+        // })
+
+        // Example 3: When you don't want to confirm
+        cy.get('tbody tr').first().find('.nb-trash').click()
+        cy.on('window:confirm', () => false) 
 
 
     })
+
+    it.only('Advance Assertions', ()=> {
+
+    })
+
+    //     What you should review
+    // Here is the HTML code:<div class="form-group row">   <label class="col-sm-3 label">Radios</label></div> How to find <label> web element by text value
+    // Lecture 11 Finding Web Elements
+
+    // Here is the HTML code:<div class="form-group row">   <label class="col-sm-3 label">Radios</label></div> Get the <div>, save the context using "then()" and then click on "label"
+    // Lecture 12 Saving Subject of the Command
+
+    // Here is the HTML code:<div class="form-group row">   <label class="col-sm-3 label">Radios</label></div> What syntax for the assertion of the class value "label" is correct?
+    // Lecture 19 Cypress Assertions
 
 })
