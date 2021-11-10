@@ -9,6 +9,7 @@
 const { onDatepickerPage } = require("../support/page_objects/datepickerPage")
 const { onFormLayoutPage } = require("../support/page_objects/formsLayoutPage")
 const { navigateTo } = require("../support/page_objects/navigationPage")
+const { onSmartTablePage } = require("../support/page_objects/smartTablePage")
 
 describe('Test With Page Objects', () => {
 
@@ -32,6 +33,10 @@ describe('Test With Page Objects', () => {
         navigateTo.datepickerPage()
         onDatepickerPage.selectCommonDatepickerDateFromToday(1)
         onDatepickerPage.selectDatepickerWithRangeFromToday(7, 14)
+        navigateTo.smartTablePage()
+        onSmartTablePage.updateAgeByFirstName('Larry', '19')
+        onSmartTablePage.addNewRecordWithFirstAndLastName('Adrian', 'Sanabria')
+        onSmartTablePage.deleteRowByIndex(1)
 
 
     })

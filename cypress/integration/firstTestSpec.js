@@ -356,17 +356,17 @@ describe('First suite', () => {
         cy.contains('Smart Table').click()
 
         // Example 1 - Not ideal:
-        // cy.get('tbody tr').first().find('.nb-trash').click()
-        // cy.on('window:confirm', (confirm) => {
-        //     expect(confirm).to.equal('Are you sure you want to delete?')
-        // })
+        cy.get('tbody tr').first().find('.nb-trash').click()
+        cy.on('window:confirm', (confirm) => {
+            expect(confirm).to.equal('Are you sure you want to delete?')
+        })
 
         // Example 2: Better way but more complicated
-        // const stub = cy.stub()
-        // cy.on('window:confirm', stub)
-        // cy.get('tbody tr').first().find('.nb-trash').click().then( () =>{
-        //     expect(stub.getCall(0)).to.be.calledWith('Are you sure you want to delete?')
-        // })
+        const stub = cy.stub()
+        cy.on('window:confirm', stub)
+        cy.get('tbody tr').first().find('.nb-trash').click().then( () =>{
+            expect(stub.getCall(0)).to.be.calledWith('Are you sure you want to delete?')
+        })
 
         // Example 3: When you don't want to confirm
         cy.get('tbody tr').first().find('.nb-trash').click()

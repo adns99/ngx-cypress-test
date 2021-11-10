@@ -12,7 +12,7 @@ function selectDayFromCurrent(day){
             cy.get('[data-name="chevron-right"]').click()
             selectDayFromCurrent(day)
         } else {
-            cy.get('.date-cell').not('').contains(futureDay).click()
+            cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
         }
     })
 
